@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szülinapi Meghívó - Október 25, 2025</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="retro-grid"></div>
+    <div class="neon-lines">
+        <div class="neon-line" style="animation-delay: 0s;"></div>
+        <div class="neon-line" style="animation-delay: 1s;"></div>
+        <div class="neon-line" style="animation-delay: 2s;"></div>
+    </div>
+    
+    <!-- Side images -->
+    <div class="side-image left">
+        <img src="img/image.png" alt="Helga képe">
+    </div>
+    <div class="side-image right">
+        <img src="img/image.png" alt="Helga képe">
+    </div>
+    
+    <button class="language-toggle" onclick="toggleLanguage()">
+        <span class="language-flag" id="currentFlag">🇩🇪</span>
+        <span id="languageText">Deutsch</span>
+    </button>
+    
+    <div class="container">
+        <div class="invitation-card">
+            <div class="header">
+                <h1 class="title" data-translate="title">Helga 40</h1>
+                <p class="subtitle" data-translate="subtitle">Szülinapi party</p>
+            </div>
+            
+            <div class="details">
+                <div class="detail-item">
+                    <span class="icon">📅</span>
+                    <strong data-translate="date">2025. Október 25. (Szombat)</strong>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="icon">🕕</span>
+                    <strong data-translate="time">18:00 órától</strong>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="icon">📍</span>
+                    <strong data-translate="location">Kiskőrös - Holdfényben</strong>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="icon">👗</span>
+                    <strong data-translate="dress_code">Dress Code: Lezser Party Dress</strong>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="icon">🍽️</span>
+                    <strong data-translate="food">Finom kajával és itallal várunk!</strong>
+                </div>
+            </div>
+            
+            <div class="rsvp-section">
+                <h3 class="rsvp-title" data-translate="rsvp_title">🎫 Részvétel megerősítése</h3>
+                <form id="rsvpForm">
+                    <div class="form-group">
+                        <label class="form-label" for="guestName" data-translate="name_label">Teljes neved</label>
+                        <input type="text" id="guestName" name="guestName" class="form-input" data-translate-placeholder="name_placeholder" placeholder="Írd be a nevedet..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="companions" data-translate="companions_label">Kísérőkkel jössz? (opcionális)</label>
+                        <select id="companions" name="companions" class="form-input">
+                            <option value="0" data-translate="companions_0">Egyedül jövök</option>
+                            <option value="1" data-translate="companions_1">+1 fő</option>
+                            <option value="2" data-translate="companions_2">+2 fő</option>
+                            <option value="3" data-translate="companions_3">+3 fő</option>
+                            <option value="4" data-translate="companions_4">+4 fő</option>
+                            <option value="5" data-translate="companions_5">+5 fő</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" data-translate="attendance_label">Részvétel</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="attendance" value="yes" id="attendingYes">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text" data-translate="yes_attend">✅ Igen, ott leszek!</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="attendance" value="no" id="attendingNo">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text" data-translate="no_attend">❌ Nem tudok jönni</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="button" class="rsvp-button" onclick="submitRSVP()" data-translate="submit_button">
+                            ✅ Válasz beküldése
+                        </button>
+                    </div>
+                    
+                    <div id="successMessage" class="success-message" data-translate="success_message">
+                        Köszönjük a válaszod! Jelentkezésed rögzítve!
+                    </div>
+                </form>
+            </div>
+            
+            <div class="attendees-section">
+                <h3 class="attendees-title" data-translate="attendees_title">👥 Ki jön el a bulira?</h3>
+                
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <span class="stat-number" id="attendeeCount">0</span>
+                        <div class="stat-label" data-translate="confirmed_count">Megerősített ember (kísérőkkel együtt)</div>
+                    </div>
+                </div>
+                
+                <div class="attendees-list" id="attendeesList">
+                    <div class="no-attendees" data-translate="no_attendees">
+                        Még senki sem erősítette meg a részvételét. 
+                        <br>Légy te az első! 🎉
+                    </div>
+                </div>
+                
+                <div class="deletion-notifications" id="deletionNotifications">
+                    <!-- Deleted attendee notifications will appear here -->
+                </div>
+            </div>
+
+            <div class="message-wall-section">
+                <h3 class="message-wall-title" data-translate="message_wall_title">💬 Üzenőfal Helgának</h3>
+                
+                <div class="message-form-container">
+                    <form id="messageForm">
+                        <div class="form-group">
+                            <label class="form-label" for="messageName" data-translate="message_name_label">Neved</label>
+                            <input type="text" id="messageName" name="messageName" class="form-input" data-translate-placeholder="message_name_placeholder" placeholder="Írd be a nevedet..." required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="messageText" data-translate="message_text_label">Üzeneted Helgának</label>
+                            <textarea id="messageText" name="messageText" class="form-input message-textarea" data-translate-placeholder="message_text_placeholder" placeholder="Írj egy kedves üzenetet..." required></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button type="button" class="rsvp-button" onclick="submitMessage()" data-translate="message_submit_button">
+                                💌 Üzenet elküldése
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <div class="no-messages" data-translate="no_messages">
+                        Még nincsenek üzenetek.<br>Légy te az első, aki üzen Helgának! 💕
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p data-translate="footer_message">Várunk szeretettel! 💕</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
