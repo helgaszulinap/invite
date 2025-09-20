@@ -27,11 +27,25 @@
         <span id="languageText">Deutsch</span>
     </button>
     
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop preload="auto" muted>
+        <source src="music/background-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <!-- Music Control Button -->
+    <button class="music-toggle" onclick="toggleMusic()" id="musicButton">
+        <span id="musicIcon">🎵</span>
+    </button>
+    
     <div class="container">
         <div class="invitation-card">
             <div class="header">
                 <h1 class="title" data-translate="title">Helga 40</h1>
                 <p class="subtitle" data-translate="subtitle">Szülinapi party</p>
+                <div class="center-image">
+                    <img src="img/image.png" alt="Helga képe">
+                </div>
             </div>
             
             <div class="details">

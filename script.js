@@ -1,6 +1,14 @@
 // Translation system
 let currentLanguage = 'hu';
 
+// Music system
+let isMusicPlaying = false;
+let musicInitialized = false;
+
+// GitHub data storage
+const GITHUB_REPO = 'helgaszulinap/invite'; // Replace with your actual repo
+const GITHUB_TOKEN = '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'; // You'll need to create a personal access token
+
 const translations = {
     hu: {
         title: "Helga 40",
@@ -190,13 +198,61 @@ function showConfetti() {
     }
 }
 
-// Local storage functions
+// GitHub data storage functions
+async function saveDataToGitHub(data) {
+    try {
+        // For now, we'll use a simple approach with GitHub's repository dispatch
+        // This requires the repository to have the workflow we created
+        
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                event_type: 'save-rsvp-data',
+                client_payload: {
+                    data: JSON.stringify(data),
+                    timestamp: new Date().toISOString()
+                }
+            })
+        });
+        
+        if (response.ok) {
+            console.log('Data saved to GitHub successfully');
+            return true;
+        } else {
+            console.error('Failed to save data to GitHub:', response.status);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error saving data to GitHub:', error);
+        return false;
+    }
+}
+
+async function loadDataFromGitHub() {
+    try {
+        const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_REPO}/main/data/rsvp-data.json`);
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        }
+    } catch (error) {
+        console.error('Error loading data from GitHub:', error);
+    }
+    return null;
+}
+
+// Local storage functions (fallback)
 function getAttendees() {
     const stored = localStorage.getItem('birthdayAttendees');
     return stored ? JSON.parse(stored) : [];
 }
 
-function saveAttendee(attendeeData) {
+async function saveAttendee(attendeeData) {
     const attendees = getAttendees();
     
     // Check if person already registered (by name only now)
@@ -212,8 +268,25 @@ function saveAttendee(attendeeData) {
         attendees.push(attendeeData);
     }
     
+    // Save to local storage (immediate)
     localStorage.setItem('birthdayAttendees', JSON.stringify(attendees));
     updateAttendeesDisplay();
+    
+    // Save to GitHub (async)
+    try {
+        const messages = getMessages();
+        const dataToSave = {
+            attendees: attendees,
+            messages: messages,
+            lastUpdated: new Date().toISOString(),
+            totalAttendees: attendees.filter(a => a.attending).length
+        };
+        
+        await saveDataToGitHub(dataToSave);
+        console.log('Data saved to GitHub successfully');
+    } catch (error) {
+        console.error('Failed to save to GitHub, using local storage only:', error);
+    }
 }
 
 function updateAttendeesDisplay() {
@@ -361,11 +434,27 @@ function getMessages() {
     return stored ? JSON.parse(stored) : [];
 }
 
-function saveMessage(messageData) {
+async function saveMessage(messageData) {
     const messages = getMessages();
     messages.unshift(messageData); // Add to beginning of array
     localStorage.setItem('birthdayMessages', JSON.stringify(messages));
     updateMessagesDisplay();
+    
+    // Save to GitHub (async)
+    try {
+        const attendees = getAttendees();
+        const dataToSave = {
+            attendees: attendees,
+            messages: messages,
+            lastUpdated: new Date().toISOString(),
+            totalAttendees: attendees.filter(a => a.attending).length
+        };
+        
+        await saveDataToGitHub(dataToSave);
+        console.log('Message saved to GitHub successfully');
+    } catch (error) {
+        console.error('Failed to save message to GitHub, using local storage only:', error);
+    }
 }
 
 function updateMessagesDisplay() {
@@ -513,3 +602,182 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// Music functions
+function initializeMusic() {
+    const audio = document.getElementById('backgroundMusic');
+    const musicButton = document.getElementById('musicButton');
+    const musicIcon = document.getElementById('musicIcon');
+    
+    if (!audio) return;
+    
+    // Set volume to 30% for background music
+    audio.volume = 0.3;
+    
+    // Try to play music automatically (may be blocked by browser)
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            // Music started successfully
+            audio.muted = false; // Unmute the audio
+            isMusicPlaying = true;
+            musicButton.classList.remove('muted');
+            musicIcon.textContent = '🎵';
+            console.log('Background music started automatically');
+        }).catch((error) => {
+            // Autoplay was prevented by browser
+            console.log('Autoplay prevented by browser:', error);
+            isMusicPlaying = false;
+            musicButton.classList.add('muted');
+            musicIcon.textContent = '🔇';
+            
+            // Show a subtle notification to user
+            showMusicNotification();
+        });
+    }
+    
+    musicInitialized = true;
+}
+
+function showMusicNotification() {
+    // Create a subtle notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: #00ffff;
+        padding: 10px 20px;
+        border-radius: 20px;
+        border: 1px solid #00ffff;
+        font-size: 0.9rem;
+        z-index: 1000;
+        animation: fadeInOut 4s ease-in-out;
+    `;
+    notification.textContent = '🎵 Kattints bárhova a zene elindításához!';
+    
+    // Add animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 4 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+        if (style.parentNode) {
+            style.parentNode.removeChild(style);
+        }
+    }, 4000);
+}
+
+function toggleMusic() {
+    const audio = document.getElementById('backgroundMusic');
+    const musicButton = document.getElementById('musicButton');
+    const musicIcon = document.getElementById('musicIcon');
+    
+    if (!audio) return;
+    
+    if (isMusicPlaying) {
+        // Pause music
+        audio.pause();
+        isMusicPlaying = false;
+        musicButton.classList.add('muted');
+        musicIcon.textContent = '🔇';
+    } else {
+        // Play music
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isMusicPlaying = true;
+                musicButton.classList.remove('muted');
+                musicIcon.textContent = '🎵';
+            }).catch((error) => {
+                console.log('Could not play music:', error);
+                // Show user-friendly message
+                alert('A zene lejátszásához kattints bárhova az oldalon, majd próbáld újra!');
+            });
+        }
+    }
+}
+
+// Load data from GitHub on page load
+async function loadDataFromGitHubOnStart() {
+    try {
+        const githubData = await loadDataFromGitHub();
+        if (githubData && githubData.attendees) {
+            // Update local storage with GitHub data
+            localStorage.setItem('birthdayAttendees', JSON.stringify(githubData.attendees));
+            localStorage.setItem('birthdayMessages', JSON.stringify(githubData.messages || []));
+            
+            console.log('Data loaded from GitHub successfully');
+            console.log('Total attendees from GitHub:', githubData.totalAttendees);
+        }
+    } catch (error) {
+        console.log('Using local storage data (GitHub data not available):', error);
+    }
+}
+
+// Initialize music when page loads
+window.addEventListener('load', async () => {
+    createParticles();
+    
+    // Load data from GitHub first
+    await loadDataFromGitHubOnStart();
+    
+    updateAttendeesDisplay();
+    updateMessagesDisplay();
+    updateDeletionNotifications();
+    loadLanguagePreference();
+    
+    // Initialize music after a short delay
+    setTimeout(() => {
+        initializeMusic();
+    }, 1000);
+});
+
+// Try to start music on first user interaction
+function tryStartMusicOnInteraction() {
+    if (!musicInitialized || !isMusicPlaying) {
+        const audio = document.getElementById('backgroundMusic');
+        const musicButton = document.getElementById('musicButton');
+        const musicIcon = document.getElementById('musicIcon');
+        
+        if (audio && !isMusicPlaying) {
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audio.muted = false; // Unmute the audio
+                    isMusicPlaying = true;
+                    musicButton.classList.remove('muted');
+                    musicIcon.textContent = '🎵';
+                    console.log('Music started on user interaction');
+                }).catch((error) => {
+                    console.log('Still cannot play music:', error);
+                });
+            }
+        }
+    }
+}
+
+// Multiple event listeners for better compatibility
+document.addEventListener('click', tryStartMusicOnInteraction, { once: true });
+document.addEventListener('touchstart', tryStartMusicOnInteraction, { once: true });
+document.addEventListener('keydown', tryStartMusicOnInteraction, { once: true });
+document.addEventListener('mousemove', tryStartMusicOnInteraction, { once: true });
+document.addEventListener('scroll', tryStartMusicOnInteraction, { once: true });

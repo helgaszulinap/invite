@@ -6,6 +6,12 @@
     box-sizing: border-box;
 }
 
+/* Mobile viewport and touch improvements */
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
 body {
     font-family: 'Russo One', monospace;
     background: 
@@ -16,6 +22,10 @@ body {
     position: relative;
     color: #00ffff;
     animation: retro-bg 10s ease-in-out infinite alternate;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 @keyframes retro-bg {
@@ -445,6 +455,9 @@ body {
     text-transform: uppercase;
     letter-spacing: 2px;
     box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+    min-height: 44px; /* Better touch target */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .rsvp-button:hover {
@@ -480,6 +493,9 @@ body {
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     transition: all 0.3s ease;
+    min-height: 44px; /* Better touch target */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .radio-option:hover {
@@ -563,26 +579,186 @@ body {
 @media (max-width: 768px) {
     .container {
         padding: 10px;
+        min-height: 100vh;
+        max-width: 100vw;
+        overflow-x: hidden;
     }
     
     .invitation-card {
-        padding: 40px 25px;
+        padding: 20px 15px;
+        margin: 10px 0;
+        border-radius: 15px;
     }
     
     .title {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 20px;
     }
     
     .detail-item {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
+        padding: 15px 12px;
+        margin: 15px 0;
+        border-radius: 8px;
+        word-wrap: break-word;
+        hyphens: auto;
+        overflow-wrap: break-word;
+    }
+    
+    .icon {
+        font-size: 1.4rem;
+        margin-right: 10px;
+    }
+    
+    .rsvp-section {
+        padding: 20px 15px;
+        margin-top: 30px;
+    }
+    
+    .rsvp-title {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-input {
+        padding: 14px 12px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        border-radius: 8px;
+    }
+    
+    .rsvp-button {
+        padding: 16px 24px;
+        font-size: 1rem;
+        min-width: 140px;
+        border-radius: 8px;
+        word-wrap: break-word;
+        white-space: normal;
+        text-align: center;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .radio-group {
+        gap: 8px;
+    }
+    
+    .radio-option {
+        padding: 10px 12px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .radio-text {
+        word-wrap: break-word;
+        hyphens: auto;
+    }
+    
+    .attendees-section {
+        padding: 20px 15px;
+        margin-top: 30px;
+    }
+    
+    .attendees-title {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .stats-container {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-item {
+        padding: 12px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .attendee-item {
+        padding: 10px 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .attendee-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .message-wall-section {
+        padding: 20px 15px;
+        margin-top: 30px;
+    }
+    
+    .message-wall-title {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+    
+    .message-form-container {
         padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .message-textarea {
+        min-height: 80px;
+    }
+    
+    .message-item {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .message-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        margin-bottom: 8px;
+    }
+    
+    .language-toggle {
+        top: 15px;
+        right: 15px;
+        padding: 6px 10px;
+        font-size: 0.7rem;
+    }
+    
+    .music-toggle {
+        top: 15px;
+        left: 15px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .footer {
+        margin-top: 30px;
+        font-size: 0.9rem;
     }
     
     .moon {
-        width: 60px;
-        height: 60px;
-        top: 30px;
-        right: 30px;
+        width: 50px;
+        height: 50px;
+        top: 20px;
+        right: 20px;
     }
 }
 
@@ -716,6 +892,9 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    min-height: 44px; /* Better touch target */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .language-toggle:hover {
@@ -723,6 +902,49 @@ body {
     transform: translateY(-2px) scale(1.05);
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
     border-color: #ff0080;
+}
+
+.music-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    background: linear-gradient(45deg, rgba(255, 215, 0, 0.3), rgba(255, 0, 128, 0.3));
+    border: 2px solid #ffd700;
+    padding: 8px 12px;
+    color: #ffff00;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.music-toggle:hover {
+    background: linear-gradient(45deg, rgba(255, 215, 0, 0.5), rgba(255, 0, 128, 0.5));
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+    border-color: #ff0080;
+}
+
+.music-toggle.muted {
+    background: linear-gradient(45deg, rgba(128, 128, 128, 0.3), rgba(64, 64, 64, 0.3));
+    border-color: #888;
+    color: #ccc;
+}
+
+.music-toggle.muted:hover {
+    background: linear-gradient(45deg, rgba(128, 128, 128, 0.5), rgba(64, 64, 64, 0.5));
+    box-shadow: 0 0 15px rgba(128, 128, 128, 0.5);
 }
 
 .language-flag {
@@ -745,6 +967,10 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     opacity: 0.7;
+    min-height: 32px;
+    min-width: 32px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .delete-button:hover {
@@ -992,27 +1218,259 @@ body {
     }
 }
 
+/* Hide center image on desktop */
+@media (min-width: 769px) {
+    .center-image {
+        display: none;
+    }
+}
+
 /* Mobile placement */
 @media (max-width: 768px) {
     .side-image.left {
         display: none;
     }
     
+    /* Hide the original side images on mobile */
     .side-image.right {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        width: 80px;
-        height: 120px;
-        transform: none;
+        display: none;
+    }
+    
+    /* Style the center image */
+    .center-image {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+    
+    .center-image img {
+        width: 120px;
+        height: auto;
+        max-height: 150px;
+        object-fit: contain;
+        object-position: top;
+        border: 3px solid;
+        border-image: linear-gradient(45deg, #ff0080, #00ffff, #ffff00) 1;
+        box-shadow: 
+            0 0 20px rgba(255, 0, 128, 0.5),
+            inset 0 0 20px rgba(0, 255, 255, 0.2);
+        animation: side-image-glow 3s ease-in-out infinite alternate;
+    }
+    
+    .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .title {
+        margin-bottom: 15px;
+        word-wrap: break-word;
+        hyphens: auto;
+        max-width: 200px;
+        text-align: center;
+    }
+    
+    .subtitle {
+        word-wrap: break-word;
+        hyphens: auto;
+        max-width: 100%;
+        text-align: center;
+        margin-bottom: 0;
     }
 }
 
 @media (max-width: 480px) {
-    .side-image.right {
-        width: 60px;
-        height: 90px;
-        top: 15px;
-        right: 15px;
+    .center-image img {
+        width: 100px;
+        height: auto;
+        max-height: 120px;
+    }
+    
+    .center-image {
+        margin: 15px 0;
+    }
+    
+    .title {
+        max-width: 150px;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+    
+    .subtitle {
+        max-width: 100%;
+        word-wrap: break-word;
+        margin-bottom: 0;
+    }
+    
+    .container {
+        padding: 5px;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+    
+    .invitation-card {
+        padding: 15px 10px;
+        margin: 5px 0;
+    }
+    
+    .title {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .detail-item {
+        font-size: 0.85rem;
+        padding: 12px 10px;
+        margin: 12px 0;
+    }
+    
+    .icon {
+        font-size: 1.2rem;
+        margin-right: 8px;
+    }
+    
+    .rsvp-section,
+    .attendees-section,
+    .message-wall-section {
+        padding: 15px 10px;
+        margin-top: 20px;
+    }
+    
+    .form-input {
+        padding: 12px 10px;
+        font-size: 16px;
+    }
+    
+    .rsvp-button {
+        padding: 14px 20px;
+        font-size: 0.9rem;
+        min-width: 120px;
+    }
+    
+    .language-toggle {
+        top: 10px;
+        right: 10px;
+        padding: 5px 8px;
+        font-size: 0.65rem;
+    }
+    
+    .music-toggle {
+        top: 10px;
+        left: 10px;
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    .attendee-item {
+        padding: 8px 10px;
+    }
+    
+    .message-item {
+        padding: 10px;
+    }
+    
+    .message-textarea {
+        min-height: 70px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 320px) {
+    .container {
+        padding: 2px;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+    
+    .invitation-card {
+        padding: 10px 8px;
+        margin: 2px 0;
+    }
+    
+    .title {
+        font-size: 1.5rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .detail-item {
+        font-size: 0.8rem;
+        padding: 10px 8px;
+        margin: 10px 0;
+    }
+    
+    .icon {
+        font-size: 1rem;
+        margin-right: 6px;
+    }
+    
+    .rsvp-section,
+    .attendees-section,
+    .message-wall-section {
+        padding: 12px 8px;
+        margin-top: 15px;
+    }
+    
+    .form-input {
+        padding: 10px 8px;
+        font-size: 16px;
+    }
+    
+    .rsvp-button {
+        padding: 12px 16px;
+        font-size: 0.85rem;
+        min-width: 100px;
+    }
+    
+    .language-toggle {
+        top: 8px;
+        right: 8px;
+        padding: 4px 6px;
+        font-size: 0.6rem;
+    }
+    
+    .center-image img {
+        width: 80px;
+        height: auto;
+        max-height: 100px;
+    }
+    
+    .center-image {
+        margin: 10px 0;
+    }
+    
+    .title {
+        max-width: 120px;
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+    
+    .subtitle {
+        max-width: 100%;
+        word-wrap: break-word;
+        font-size: 0.8rem;
+        margin-bottom: 0;
+    }
+    
+    .attendee-item {
+        padding: 6px 8px;
+    }
+    
+    .message-item {
+        padding: 8px;
+    }
+    
+    .message-textarea {
+        min-height: 60px;
     }
 }
